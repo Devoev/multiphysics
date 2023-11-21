@@ -1,4 +1,3 @@
-from scipy.linalg import pinv
 from scipy.sparse import spmatrix, eye
 
 from fit.matrices.geo_mats import create_geo_mats
@@ -14,7 +13,7 @@ def create_p2d_mat(msh: Mesh, mat: float) -> spmatrix:
 
     ds, _, _, dat = create_geo_mats(msh)
     const_mat = mat * eye(3 * msh.np)
-    return dat * const_mat * spdiag_pinv(ds)
+    return dat @ const_mat @ spdiag_pinv(ds)
 
 
 def create_d2p_mat(msh: Mesh, mat: float) -> spmatrix:
@@ -25,4 +24,4 @@ def create_d2p_mat(msh: Mesh, mat: float) -> spmatrix:
 
     _, dst, da, _ = create_geo_mats(msh)
     const_mat = mat * eye(3 * msh.np)
-    return dst * const_mat * spdiag_pinv(da)
+    return dst @ const_mat @ spdiag_pinv(da)

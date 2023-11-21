@@ -15,5 +15,5 @@ c, s, st = create_top_mats(msh)
 meps = create_p2d_mat(msh, 8.854e-12)
 mmui = create_p2d_mat(msh, 1 / 1.256e-6)
 
-plt.spy(st, markersize=.1)
+plt.spy(meps, markersize=.1)
 plt.show()
