@@ -12,13 +12,13 @@ class Mesh:
     zmesh: np.ndarray
 
     def __post_init__(self):
-        self.nx = self.xmesh.size
-        self.ny = self.ymesh.size
-        self.nz = self.zmesh.size
-        self.np = self.nx * self.ny * self.nz
-        self.mx = 1
-        self.my = self.nx
-        self.mz = self.nx * self.nz
+        self.nx: int = self.xmesh.size
+        self.ny: int = self.ymesh.size
+        self.nz: int = self.zmesh.size
+        self.np: int = self.nx * self.ny * self.nz
+        self.mx: int = 1
+        self.my: int = self.nx
+        self.mz: int = self.nx * self.nz
 
     def idx(self, i: int, j: int, k: int) -> int:
         """Calculates the canonical index."""
