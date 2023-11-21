@@ -13,12 +13,10 @@ def create_geo_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix, spmatrix]:
     :return: ``ds``, ``dst``, ``da`` and ``dat``.
     """
 
-    xmesh, ymesh, zmesh, nx, ny, nz, n, *_ = msh
-
     # Primary grid
-    dx = np.append(np.diff(xmesh), 0)
-    dy = np.append(np.diff(ymesh), 0)
-    dz = np.append(np.diff(zmesh), 0)
+    dx = np.append(np.diff(msh.xmesh), 0)
+    dy = np.append(np.diff(msh.ymesh), 0)
+    dz = np.append(np.diff(msh.zmesh), 0)
 
     dsx, dsy, dsz = create_ds_vecs(msh, dx, dy, dz)
     ds, da = create_geo_mats_from_ds_vecs(dsx, dsy, dsz)
