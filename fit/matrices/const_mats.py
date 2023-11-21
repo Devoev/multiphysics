@@ -13,5 +13,16 @@ def create_p2d_mat(msh: Mesh, mat: float) -> spmatrix:
     """
 
     ds, _, _, dat = create_geo_mats(msh)
-    dmat = mat * eye(3*msh.np)
-    return dat*dmat*spdiag_pinv(ds)
+    const_mat = mat * eye(3 * msh.np)
+    return dat * const_mat * spdiag_pinv(ds)
+
+
+def create_d2p_mat(msh: Mesh, mat: float) -> spmatrix:
+    """Creates the constitutive matrix from the dual to primary grid.
+    :param msh: Mesh object.
+    :param mat: Material parameter for the constitutive relation.
+    """
+
+    _, dst, da, _ = create_geo_mats(msh)
+    const_mat = mat * eye(3 * msh.np)
+    return dst * const_mat * spdiag_pinv(da)

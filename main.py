@@ -1,18 +1,19 @@
 import numpy as np
 from matplotlib import pyplot as plt
-from scipy.sparse.linalg import norm
 
 from fit.matrices.const_mats import create_p2d_mat
-from fit.matrices.geo_mats import create_geo_mats
-from fit.matrices.top_mats import create_p_mat, create_top_mats
-from fit.matrices.util import spdiag_pinv
+from fit.matrices.top_mats import create_top_mats
 from fit.mesh.mesh import Mesh
 
-xmesh = np.linspace(0, 10, 5)
-ymesh = np.linspace(0, 10, 5)
-zmesh = np.linspace(0, 10, 5)
+xmesh = np.linspace(0, 10, 3)
+ymesh = np.linspace(0, 10, 3)
+zmesh = np.linspace(0, 10, 3)
 msh = Mesh(xmesh, ymesh, zmesh)
 
 c, s, st = create_top_mats(msh)
 
-deps = create_p2d_mat(msh, 1)
+meps = create_p2d_mat(msh, 8.854e-12)
+mmui = create_p2d_mat(msh, 1 / 1.256e-6)
+
+plt.spy(st, markersize=.1)
+plt.show()
