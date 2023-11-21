@@ -19,3 +19,7 @@ class Mesh:
         self.mx = 1
         self.my = self.nx
         self.mz = self.nx * self.nz
+
+    def idx(self, i: int, j: int, k: int) -> int:
+        """Calculates the canonical index."""
+        return 1 + (i-1)*self.mx + (j-1)*self.my + (k-1)*self.mz
