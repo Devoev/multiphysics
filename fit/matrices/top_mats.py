@@ -8,7 +8,7 @@ from fit.mesh.mesh import Mesh
 
 def create_top_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix]:
     """Creates the topological matrices for the given ``msh``.
-    :return: The ``c``, ``s`` and ``st`` matrices.
+    :return: The ``g``, ``c`` and ``d`` matrices.
     """
 
     n = msh.np
@@ -16,10 +16,10 @@ def create_top_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix]:
     py = create_p_mat(n, msh.ny)
     pz = create_p_mat(n, msh.nz)
 
+    g = bmat([[-px.T, -py.T, -pz.T]]).T
     c = bmat([[None, -pz, py], [pz, None, -px], [-py, pz, None]])
-    s = bmat([[px, py, pz]])
-    st = bmat([[-px.T, -py.T, -pz.T]])
-    return c, s, st
+    d = bmat([[px, py, pz]])
+    return g, c, d
 
 
 def create_p_mat(n: int, m: int) -> spmatrix:
