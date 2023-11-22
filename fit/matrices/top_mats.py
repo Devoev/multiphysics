@@ -16,7 +16,7 @@ def create_top_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix]:
     py = create_p_mat(n, msh.ny)
     pz = create_p_mat(n, msh.nz)
 
-    g = bmat([[-px.T, -py.T, -pz.T]]).T
+    g = bmat([[px.T, py.T, pz.T]]).T
     c = bmat([[None, -pz, py], [pz, None, -px], [-py, pz, None]])
     d = bmat([[px, py, pz]])
     return g, c, d
@@ -31,5 +31,5 @@ def create_p_mat(n: int, m: int) -> spmatrix:
 
     rows = np.concatenate((np.arange(n), np.arange(n - m)))
     cols = np.concatenate((np.arange(n), np.arange(m, n)))
-    vals = np.concatenate((-np.ones((n, 1)), np.ones((n - m, 1))))[:, 0]
+    vals = np.concatenate((-np.ones((n,)), np.ones((n - m,))))
     return csr_matrix((vals, (rows, cols)), shape=(n, n))

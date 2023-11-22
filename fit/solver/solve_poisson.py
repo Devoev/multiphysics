@@ -1,5 +1,6 @@
 import numpy as np
-from scipy.sparse.linalg import spsolve
+from numpy.linalg import matrix_rank
+from scipy.sparse.linalg import spsolve, norm
 
 from fit.matrices.const_mats import create_p2d_mat
 from fit.matrices.top_mats import create_top_mats
@@ -19,7 +20,7 @@ def solve_poisson(msh: Mesh, f: np.ndarray, mat: float, bc: np.ndarray) -> np.nd
     # Assemble matrix
     g, _, d = create_top_mats(msh)
     const_mat = create_p2d_mat(msh, mat)
-    A = -d @ const_mat @ g
+    A = g.T @ const_mat @ g
 
     # Deflate system
     idx_dof = np.isnan(bc)
@@ -28,6 +29,9 @@ def solve_poisson(msh: Mesh, f: np.ndarray, mat: float, bc: np.ndarray) -> np.nd
 
     b = f[idx_dof] - A[idx_dof,:][:,idx_bc] @ bc
     A = A[idx_dof,:][:,idx_dof]
+
+    print(A.shape)
+    print(matrix_rank(A.toarray()))
 
     # Solve system
     x = np.empty((msh.np,))
