@@ -12,9 +12,9 @@ def create_top_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix]:
     """
 
     n = msh.np
-    px = create_p_mat(n, msh.nx)
-    py = create_p_mat(n, msh.ny)
-    pz = create_p_mat(n, msh.nz)
+    px = create_p_mat(n, msh.mx)
+    py = create_p_mat(n, msh.my)
+    pz = create_p_mat(n, msh.mz)
 
     g = bmat([[px.T, py.T, pz.T]]).T
     c = bmat([[None, -pz, py], [pz, None, -px], [-py, pz, None]])
