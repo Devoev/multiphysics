@@ -26,7 +26,7 @@ def solve_poisson(msh: Mesh, f: np.ndarray, mat: float, bc: np.ndarray) -> np.nd
     idx_bc = ~idx_dof
     bc = bc[idx_bc]
 
-    b = f[idx_dof] - A[idx_dof,:][:,idx_bc] * bc
+    b = f[idx_dof] - A[idx_dof,:][:,idx_bc] @ bc
     A = A[idx_dof,:][:,idx_dof]
 
     # Solve system

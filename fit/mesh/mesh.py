@@ -22,7 +22,7 @@ class Mesh:
 
     def idx(self, i: int, j: int, k: int) -> int:
         """Calculates the canonical index."""
-        return 1 + (i-1)*self.mx + (j-1)*self.my + (k-1)*self.mz
+        return i*self.mx + j*self.my + k*self.mz
 
     def __iter__(self):
         return iter((self.xmesh, self.ymesh, self.zmesh, self.nx, self.ny, self.nz, self.np, self.mx, self.my, self.mz))

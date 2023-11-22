@@ -8,7 +8,7 @@ from fit.solver.solve_poisson import solve_poisson
 
 xmesh = np.linspace(0, 10, 10)
 ymesh = np.linspace(0, 10, 10)
-zmesh = np.linspace(0, 10, 1)
+zmesh = np.linspace(0, 10, 2)
 msh = Mesh(xmesh, ymesh, zmesh)
 
 #%%
