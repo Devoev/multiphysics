@@ -30,9 +30,6 @@ def solve_poisson(msh: Mesh, f: np.ndarray, mat: float, bc: np.ndarray) -> np.nd
     b = f[idx_dof] - A[idx_dof,:][:,idx_bc] @ bc
     A = A[idx_dof,:][:,idx_dof]
 
-    print(A.shape)
-    print(matrix_rank(A.toarray()))
-
     # Solve system
     x = np.empty((msh.np,))
     x[idx_dof] = spsolve(A, b)
