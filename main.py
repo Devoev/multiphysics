@@ -1,9 +1,12 @@
 import numpy as np
 from matplotlib import pyplot as plt
+from scipy.sparse import diags, block_diag, coo_matrix
 from scipy.sparse.linalg import norm
 
 from fit.matrices.const_mats import create_p2d_mat
+from fit.matrices.geo_mats import create_geo_mats
 from fit.matrices.top_mats import create_top_mats, create_p_mat
+from fit.matrices.util import spdiag_pinv
 from fit.mesh.box import Box, mesh_boxes
 from fit.mesh.mesh import Mesh
 from fit.solver.solve_poisson import solve_poisson
@@ -27,34 +30,36 @@ print(norm(d @ c))
 print(norm(g.T @ c.T))
 
 #%%
-V0 = 1
+ds, dst, da, dat = create_geo_mats(msh)
 
-bc = np.full(msh.np, np.nan)
-idx_bc_1 = []
-idx_bc_2 = []
+arr = coo_matrix(np.array([[1, 0, 0], [0, 2, 0], [0, 0.5, 0]]))
+print(spdiag_pinv(arr))
 
-for i in range(10):
-    for k in range(2):
-        idx_bc_1.append(msh.idx(0, i, k))
-        idx_bc_2.append(msh.idx(10-1, i, k))
+#%%
+_, _, _, nx, ny, nz, n, mx, my, mz = msh
+diag = np.ones((4,n))
+x_av = diags(diag, (0, -my, -mz, -my-mz), (n,n))
+y_av = diags(diag, (0, -mz, -mx, -mz-mx), (n,n))
+z_av = diags(diag, (0, -mx, -my, -mx-my), (n,n))
+av = block_diag([x_av, y_av, z_av])
 
-bc[idx_bc_1] = 0
-bc[idx_bc_2] = V0
+plt.spy(av, markersize=.1)
+plt.show()
 
-box_bc_1 = Box(0, (0, 1), (0, msh.ny), (0, msh.nz))
-box_bc_2 = Box(V0, (10-1, 10), (0, msh.ny), (0, msh.nz))
-bc_new = mesh_boxes(msh, [box_bc_1, box_bc_2], np.nan)
+#%%
+sig = 58e6
+sig_arr = np.full(msh.np, sig)
+m1 = create_p2d_mat(msh, sig_arr).toarray()
+m2 = create_p2d_mat(msh, sig).toarray()
 
-print(bc)
-print(bc_new)
-print(np.array_equal(bc, bc_new, equal_nan=True))
-print(bc - bc_new)
+plt.figure()
+plt.spy(m1, markersize=.1)
+plt.title("Array")
+plt.show()
 
-# #%%
-# bc = np.full(msh.np, np.nan)
-# idx_bc = [msh.idx(10, j, 1) for j in range(10)]
-# bc[idx_bc] = 10
-#
-# #%%
-# eps = 8.854e-12
-# phi = solve_poisson(msh, np.zeros(msh.np), eps, bc)
+plt.figure()
+plt.spy(m2, markersize=.1)
+plt.title("Scalar")
+plt.show()
+
+print(np.linalg.norm(m1 - m2))

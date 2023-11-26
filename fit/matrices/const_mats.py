@@ -22,7 +22,7 @@ def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> spmatrix:
 
         x_av = diags(diag, (0, -my, -mz, -my-mz), (n,n))
         y_av = diags(diag, (0, -mz, -mx, -mz-mx), (n,n))
-        z_av = diags(diag, (0, -mx, -my, -my-mx), (n,n))
+        z_av = diags(diag, (0, -mx, -my, -mx-my), (n,n))
         av = block_diag([x_av, y_av, z_av])
 
         mat = np.concatenate([mat, mat, mat])
