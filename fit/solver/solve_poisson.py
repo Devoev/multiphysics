@@ -1,25 +1,23 @@
 import numpy as np
-from numpy.linalg import matrix_rank
-from scipy.sparse.linalg import spsolve, norm
+from scipy.sparse import spmatrix
+from scipy.sparse.linalg import spsolve
 
-from fit.matrices.const_mats import create_p2d_mat
 from fit.matrices.top_mats import create_top_mats
 from fit.mesh.mesh import Mesh
 
 
-def solve_poisson(msh: Mesh, f: np.ndarray, mat: float, bc: np.ndarray) -> np.ndarray:
+def solve_poisson(msh: Mesh, f: np.ndarray, const_mat: spmatrix, bc: np.ndarray) -> np.ndarray:
     """
     Solves the `Poisson` problem.
     :param msh: Mesh object.
     :param f: Right hand side vector of size ``np``.
-    :param mat: Material inside the domain.
+    :param const_mat: Constitutive matrix.
     :param bc: Boundary conditions vector of size ``np``. ``NaN`` at DOF indices.
     :return: Solution vector.
     """
 
     # Assemble matrix
     g, _, d = create_top_mats(msh)
-    const_mat = create_p2d_mat(msh, mat)
     A = g.T @ const_mat @ g
 
     # Deflate system

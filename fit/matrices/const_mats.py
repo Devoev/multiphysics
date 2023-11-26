@@ -28,7 +28,7 @@ def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> spmatrix:
         mat = np.concatenate([mat, mat, mat])
         dmat = diags(0.25*spdiag_pinv(dat) @ av @ da @ mat, 0, (3*n,3*n))
     else:
-        pass
+        raise Exception("not implemented")
 
     return dat @ dmat @ spdiag_pinv(ds)
 
