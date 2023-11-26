@@ -26,11 +26,10 @@ def plot_field(msh: Mesh, field: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='
 
     # Normalize
     u_abs = np.sqrt(ux**2 + uy**2)
-    # ux = ux / magnitude
-    # uy = uy / magnitude
 
     plt.quiver(x, y, ux, uy, u_abs, **kwargs)
     plt.xlabel(xlabel)
     plt.ylabel(ylabel)
     plt.title(title)
+    plt.colorbar()
     plt.show()
