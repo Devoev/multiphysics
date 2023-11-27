@@ -40,8 +40,8 @@ def create_ds_vecs(msh: Mesh, dx: np.ndarray, dy: np.ndarray, dz: np.ndarray) ->
 
     _, _, _, nx, ny, nz, n, *_ = msh
     dsx = np.tile(dx, (ny * nz,))
-    dsy = np.reshape(np.tile(dy, (nx, nz)), (n,))
-    dsz = np.reshape(np.tile(dz, (nx * ny,)), (n,))
+    dsy = np.reshape(np.tile(dy, (nx, nz)), (n,), order='F')
+    dsz = np.reshape(np.tile(dz, (nx * ny,1)), (n,), order='F')
     return dsx, dsy, dsz
 
 
