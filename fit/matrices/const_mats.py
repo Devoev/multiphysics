@@ -1,3 +1,5 @@
+import numbers
+
 import numpy as np
 from scipy.sparse import spmatrix, eye, diags, block_diag
 
@@ -15,8 +17,8 @@ def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> spmatrix:
     _, _, _, nx, ny, nz, n, mx, my, mz = msh
     ds, _, da, dat = create_geo_mats(msh)
 
-    if isinstance(mat, float):
-        dmat = mat * eye(3*n)
+    if isinstance(mat, numbers.Number):
+        dmat = eye(3*n) * mat
     elif isinstance(mat, np.ndarray):
         diag = np.ones((4,n))
 

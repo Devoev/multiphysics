@@ -1,4 +1,3 @@
-from dataclasses import astuple
 from typing import Tuple
 
 import numpy as np
@@ -22,9 +21,10 @@ def create_geo_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix, spmatrix]:
     ds, da = create_geo_mats_from_ds_vecs(dsx, dsy, dsz)
 
     # Dual grid
-    dxt = (np.concatenate([[0], dx[:-1]]) + dx) / 2
-    dyt = (np.concatenate([[0], dy[:-1]]) + dy) / 2
-    dzt = (np.concatenate([[0], dz[:-1]]) + dz) / 2
+    zero = np.array([0])
+    dxt = (np.concatenate([zero, dx[:-1]]) + dx) / 2
+    dyt = (np.concatenate([zero, dy[:-1]]) + dy) / 2
+    dzt = (np.concatenate([zero, dz[:-1]]) + dz) / 2
 
     dsxt, dsyt, dszt = create_ds_vecs(msh, dxt, dyt, dzt)
     dst, dat = create_geo_mats_from_ds_vecs(dsxt, dsyt, dszt)
@@ -41,7 +41,7 @@ def create_ds_vecs(msh: Mesh, dx: np.ndarray, dy: np.ndarray, dz: np.ndarray) ->
     _, _, _, nx, ny, nz, n, *_ = msh
     dsx = np.tile(dx, (ny * nz,))
     dsy = np.reshape(np.tile(dy, (nx, nz)), (n,))
-    dsz = np.reshape(np.tile(dz, (nx * ny, 1)), (n,))
+    dsz = np.reshape(np.tile(dz, (nx * ny,)), (n,))
     return dsx, dsy, dsz
 
 
@@ -49,6 +49,7 @@ def create_geo_mats_from_ds_vecs(dsx: np.ndarray, dsy: np.ndarray, dsz: np.ndarr
     """ Creates the geometrical matrices from the given ``ds`` vectors.
     :return: ``ds`` and ``da``.
     """
+
     ds: spmatrix = diags(np.concatenate([dsx, dsy, dsz]))
     da: spmatrix = diags(np.concatenate([dsy * dsz, dsz * dsx, dsx * dsy]))
     return ds, da
