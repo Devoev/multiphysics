@@ -4,7 +4,7 @@ import numpy as np
 from scipy.sparse import spmatrix, eye, diags, block_diag
 
 from fit.matrices.geo_mats import create_geo_mats
-from fit.matrices.util import spdiag_pinv
+from fit.matrices.util import pinv
 from fit.mesh.mesh import Mesh
 
 
@@ -28,11 +28,11 @@ def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> spmatrix:
         av = block_diag([x_av, y_av, z_av])
 
         mat = np.concatenate([mat, mat, mat])
-        dmat = diags(0.25*spdiag_pinv(dat) @ av @ da @ mat, 0, (3*n,3*n))
+        dmat = diags(0.25 * pinv(dat) @ av @ da @ mat, 0, (3 * n, 3 * n))
     else:
         raise Exception("not implemented")
 
-    return dat @ dmat @ spdiag_pinv(ds)
+    return dat @ dmat @ pinv(ds)
 
 
 def create_d2p_mat(msh: Mesh, mat: float) -> spmatrix:
@@ -43,4 +43,4 @@ def create_d2p_mat(msh: Mesh, mat: float) -> spmatrix:
 
     _, dst, da, _ = create_geo_mats(msh)
     const_mat = mat * eye(3 * msh.np)
-    return dst @ const_mat @ spdiag_pinv(da)
+    return dst @ const_mat @ pinv(da)

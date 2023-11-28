@@ -1,7 +1,7 @@
 from scipy.sparse import spmatrix, csr_matrix
 
 
-def spdiag_pinv(mat: spmatrix) -> spmatrix:
+def pinv(mat: spmatrix) -> spmatrix:
     """Computes the pseudo inverse of the given sparse diagonal matrix ``mat``."""
 
     mat = mat.tocoo()
