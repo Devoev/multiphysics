@@ -17,7 +17,6 @@ def plot_pot(msh: Mesh, pot: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ 
 
     pot_z = np.reshape(pot, (msh.nz, msh.ny, msh.nx))
     pot_z = pot_z[nz, :, :]
-    plt.rcParams['text.usetex'] = True
 
     [x, y] = np.meshgrid(msh.xmesh, msh.ymesh)
     plt.contourf(x, y, pot_z, **kwargs)
