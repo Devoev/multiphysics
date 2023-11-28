@@ -14,7 +14,6 @@ def plot_vec(msh: Mesh, vec: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ 
     :param xlabel: Label of x-axis.
     :param ylabel: Label of y-axis.
     :param title: Title of the plot.
-    :return:
     """
 
     x, y = np.meshgrid(msh.xmesh, msh.ymesh)
