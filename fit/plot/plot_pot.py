@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from fit.mesh.mesh import Mesh
+from fit.util.array import pot_to_3d_arr
 
 
 def plot_pot(msh: Mesh, pot: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ (m)', title='', **kwargs):
@@ -15,8 +16,7 @@ def plot_pot(msh: Mesh, pot: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ 
     :param title: Title of the plot.
     """
 
-    pot_z = np.reshape(pot, (msh.nx, msh.ny, msh.nz), order='F').transpose((1, 0, 2))
-    pot_z = pot_z[:, :, nz]
+    pot_z = pot_to_3d_arr(msh, pot)[:, :, nz]
 
     [x, y] = np.meshgrid(msh.xmesh, msh.ymesh)
     plt.contourf(x, y, pot_z, **kwargs)

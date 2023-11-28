@@ -2,6 +2,7 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from fit.mesh.mesh import Mesh
+from fit.util.array import vec_to_3d_arr
 
 
 def plot_vec(msh: Mesh, vec: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ (m)', title='', **kwargs):
@@ -17,12 +18,9 @@ def plot_vec(msh: Mesh, vec: np.ndarray, nz: int, xlabel='$x$ (m)', ylabel='$y$ 
     """
 
     x, y = np.meshgrid(msh.xmesh, msh.ymesh)
-    ux = vec[0:msh.np]
-    ux = np.reshape(ux, (msh.nz, msh.ny, msh.nx))
-    ux = ux[nz, :, :]
-    uy = vec[msh.np:2 * msh.np]
-    uy = np.reshape(uy, (msh.nz, msh.ny, msh.nx))
-    uy = uy[nz, :, :]
+    vec_x, vec_y, _ = vec_to_3d_arr(msh, vec)
+    ux = vec_x[:,:,nz]
+    uy = vec_y[:,:,nz]
 
     # Normalize
     u_abs = np.sqrt(ux**2 + uy**2)
