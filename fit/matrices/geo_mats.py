@@ -1,12 +1,12 @@
 from typing import Tuple
 
 import numpy as np
-from scipy.sparse import diags, spmatrix
+import scipy.sparse as sp
 
 from fit.mesh.mesh import Mesh
 
 
-def create_geo_mats(msh: Mesh) -> Tuple[spmatrix, spmatrix, spmatrix, spmatrix]:
+def create_geo_mats(msh: Mesh) -> Tuple[sp.dia_matrix, sp.dia_matrix, sp.dia_matrix, sp.dia_matrix]:
     """Creates the geometric matrices for the given ``msh``.
 
     :return: ``ds``, ``dst``, ``da`` and ``dat``.
@@ -45,11 +45,11 @@ def create_ds_vecs(msh: Mesh, dx: np.ndarray, dy: np.ndarray, dz: np.ndarray) ->
     return dsx, dsy, dsz
 
 
-def create_geo_mats_from_ds_vecs(dsx: np.ndarray, dsy: np.ndarray, dsz: np.ndarray) -> Tuple[spmatrix, spmatrix]:
+def create_geo_mats_from_ds_vecs(dsx: np.ndarray, dsy: np.ndarray, dsz: np.ndarray) -> Tuple[sp.dia_matrix, sp.dia_matrix]:
     """ Creates the geometrical matrices from the given ``ds`` vectors.
     :return: ``ds`` and ``da``.
     """
 
-    ds: spmatrix = diags(np.concatenate([dsx, dsy, dsz]))
-    da: spmatrix = diags(np.concatenate([dsy * dsz, dsz * dsx, dsx * dsy]))
+    ds = sp.diags(np.concatenate([dsx, dsy, dsz]))
+    da = sp.diags(np.concatenate([dsy * dsz, dsz * dsx, dsx * dsy]))
     return ds, da

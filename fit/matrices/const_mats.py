@@ -8,7 +8,7 @@ from fit.matrices.util import pinv
 from fit.mesh.mesh import Mesh
 
 
-def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> sp.spmatrix:
+def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> sp.coo_matrix:
     """Creates the constitutive matrix from the primary to dual grid.
     :param msh: Mesh object.
     :param mat: Material parameter for the constitutive relation. Either a single value or an array of size (msh.np).
@@ -35,7 +35,7 @@ def create_p2d_mat(msh: Mesh, mat: float | np.ndarray) -> sp.spmatrix:
     return dat @ dmat @ pinv(ds)
 
 
-def create_d2p_mat(msh: Mesh, mat: float) -> sp.spmatrix:
+def create_d2p_mat(msh: Mesh, mat: float) -> sp.coo_matrix:
     """Creates the constitutive matrix from the dual to primary grid.
     :param msh: Mesh object.
     :param mat: Material parameter for the constitutive relation.
