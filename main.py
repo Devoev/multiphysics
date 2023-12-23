@@ -42,12 +42,11 @@ meps = create_p2d_mat(msh, eps0)
 q = np.zeros((msh.np,))
 q[msh.find_idx(0.5, 0.5, 0.5)] = 1
 bc = np.full((msh.np,), np.nan)
-# bc[msh.find_idx(0.5, 0.5, 0.5)] = 1
 
-# bc[msh.find_idx(0,0,0.5)] = 0
-# bc[msh.find_idx(1,0,0.5)] = 0
-# bc[msh.find_idx(0,1,0.5)] = 0
-# bc[msh.find_idx(1,1,0.5)] = 0
+bc[msh.find_idx(0,0,0.5)] = 0
+bc[msh.find_idx(1,0,0.5)] = 0
+bc[msh.find_idx(0,1,0.5)] = 0
+bc[msh.find_idx(1,1,0.5)] = 0
 pot = solve_poisson(msh, q, meps, bc)
 
 plot_pot(msh, pot, nz=2, levels=20)
