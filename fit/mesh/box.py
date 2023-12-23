@@ -11,9 +11,27 @@ class Box:
     """A rectangular box with a value."""
 
     value: float
-    x_idx: Tuple[int, int]
-    y_idx: Tuple[int, int]
-    z_idx: Tuple[int, int]
+    x_range: Tuple[int, int]
+    y_range: Tuple[int, int]
+    z_range: Tuple[int, int]
+
+    def indices(self, msh: Mesh) -> np.ndarray:
+        """
+        Computes the canonical indices of this box.
+        :param msh: Mesh object.
+        :return: Index array.
+        """
+        xmin, xmax = self.x_range
+        ymin, ymax = self.y_range
+        zmin, zmax = self.z_range
+
+        idx = []
+        for i in range(xmin, xmax):
+            for j in range(ymin, ymax):
+                for k in range(zmin, zmax):
+                    idx.append(msh.idx(i,j,k))
+
+        return np.array(idx)
 
 
 def mesh_boxes(msh: Mesh, boxes: List[Box], mat: float) -> np.ndarray:
@@ -22,35 +40,11 @@ def mesh_boxes(msh: Mesh, boxes: List[Box], mat: float) -> np.ndarray:
     :param msh: Mesh object.
     :param boxes: Boxed regions.
     :param mat: Default material value.
-    :return: Material array of size (msh.np).
+    :return: Material array of size ``(msh.np)``.
     """
 
     mat = np.full(msh.np, mat)
     for box in boxes:
-        xmin, xmax = box.x_idx
-        ymin, ymax = box.y_idx
-        zmin, zmax = box.z_idx
-
-        idx = []
-        for i in range(xmin, xmax):
-            for j in range(ymin, ymax):
-                for k in range(zmin, zmax):
-                    idx.append(msh.idx(i,j,k))
-
-        mat[idx] = box.value
-
-        # TODO: Fix this
-        # dx = xmax - xmin
-        # dy = ymax - ymin
-        # dz = zmax - zmin
-        #
-        # x_idx = np.arange(xmin, xmax)
-        # y_idx = np.arange(ymin, ymax)
-        # z_idx = np.arange(zmin, zmax)
-        #
-        # idx = np.tile(x_idx, (dy,)) + np.tile(y_idx * msh.my, (dx,))
-        # idx = np.reshape(idx, (dx*dy))
-        # idx = np.tile(idx, (dz,)) + np.tile(z_idx * msh.mz, (dx*dy,))
-        # mat[idx] = box.value
+        mat[box.indices(msh)] = box.value
 
     return mat
