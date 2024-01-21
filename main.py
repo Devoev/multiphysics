@@ -1,52 +1,75 @@
+from typing import Callable
+
 import numpy as np
-import scipy.sparse as sp
-import scipy.sparse.linalg as sla
+import scipy as sp
+from matplotlib import pyplot as plt
 
-from fit.matrices.const_mats import create_p2d_mat
-from fit.matrices.geo_mats import create_geo_mats
-from fit.matrices.util import pinv
-from fit.mesh.mesh import Mesh
-from fit.plot.plot_pot import plot_pot
-from fit.solver.solve_poisson import solve_poisson
-from fit.util.interpolate import interpolate_field
 
-xmesh = np.linspace(0, 1, 20)
-ymesh = np.linspace(0, 1, 20)
-zmesh = np.linspace(0, 1, 5)
-msh = Mesh(xmesh, ymesh, zmesh)
+# %% Define problem
+def f1(y1: float, y2: float) -> np.array:
+    return y1 * y2
 
-# ds, dst, da, dat = create_geo_mats(msh)
-# inv = pinv(ds)
-#
-# ds = ds.toarray()
-# dst = dst.toarray()
-# da = da.toarray()
-# dat = dat.toarray()
-#
-# one = ds @ inv
-# print(np.diag(one))
 
-#
-# print(np.linalg.norm(ds, ord=2))
-# print(np.linalg.norm(dst, ord=2))
-# print(np.linalg.norm(da, ord=2))
-# print(np.linalg.norm(dat, ord=2))
+def f2(y1: float, y2: float) -> np.array:
+    return np.sin(y1) - np.cos(y2)
 
-eps0 = 8.85e-12
-meps = create_p2d_mat(msh, eps0)
-# print(sla.norm(meps, ord=2))
-# meps = np.eye(3*msh.np) * eps0
-# print(np.linalg.norm(meps, ord=2))
-# print(np.linalg.matrix_rank(meps.toarray()))
 
-q = np.zeros((msh.np,))
-q[msh.find_idx(0.5, 0.5, 0.5)] = 1
-bc = np.full((msh.np,), np.nan)
+kmax = 100
+T = 5
+t = np.linspace(0, T, 100)
 
-bc[msh.find_idx(0,0,0.5)] = 0
-bc[msh.find_idx(1,0,0.5)] = 0
-bc[msh.find_idx(0,1,0.5)] = 0
-bc[msh.find_idx(1,1,0.5)] = 0
-pot = solve_poisson(msh, q, meps, bc)
 
-plot_pot(msh, pot, nz=2, levels=20)
+# %% Define solvers
+def euler(t: np.ndarray, y0: float, f: Callable[[int, float, float], float]) -> np.ndarray:
+    n = t.size
+    h = np.diff(t)
+    y = np.empty((n,))
+    y[0] = y0
+
+    for i in range(n - 1):
+        y[i + 1] = sp.optimize.fsolve(lambda x: x - y[i] - h[i] * f(i, t[i + 1], x), y[i])[0]
+
+    return y
+
+
+def jacobi(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], float],
+    f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
+    n = t.size
+    y1 = np.empty((n,))
+    y2 = np.empty((n,))
+    y1[0] = y2[0] = y0
+
+    for k in range(kmax):
+        y1_new = euler(t, y1[0], lambda i, ti, yi: f1(yi, y2[i]))
+        y2_new = euler(t, y2[0], lambda i, ti, yi: f2(y1[i], yi))
+        y1 = y1_new
+        y2 = y2_new
+
+    return y1, y2
+
+
+def gauss_seidel(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], float],
+           f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
+    n = t.size
+    y1 = np.empty((n,))
+    y2 = np.empty((n,))
+    y1[0] = y2[0] = y0
+
+    for k in range(kmax):
+        y1_new = euler(t, y1[0], lambda i, ti, yi: f1(yi, y2[i]))
+        y2_new = euler(t, y2[0], lambda i, ti, yi: f2(y1_new[i], yi))
+        y1 = y1_new
+        y2 = y2_new
+
+    return y1, y2
+
+
+# %% Solve
+y1, y2 = gauss_seidel(t, 1, kmax, f1, f2)
+
+# %% Plot
+plt.plot(t, y1, 'r')
+plt.plot(t, y2, 'b')
+# plt.plot(t, [np.exp(ti) for ti in t], 'r--')
+# plt.plot(t, [np.exp(2*ti) for ti in t], 'b--')
+plt.show()
