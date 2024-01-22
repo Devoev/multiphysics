@@ -14,7 +14,7 @@ def f2(y1: float, y2: float) -> np.array:
     return np.sin(y1) - np.cos(y2)
 
 
-kmax = 100
+kmax = 5
 T = 5
 t = np.linspace(0, T, 100)
 
@@ -64,12 +64,12 @@ def gauss_seidel(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float
     return y1, y2
 
 
-# %% Solve
-y1, y2 = gauss_seidel(t, 1, kmax, f1, f2)
-
-# %% Plot
-plt.plot(t, y1, 'r')
-plt.plot(t, y2, 'b')
-# plt.plot(t, [np.exp(ti) for ti in t], 'r--')
-# plt.plot(t, [np.exp(2*ti) for ti in t], 'b--')
+# %% Solve and plot
+plt.show()
+for k in range(kmax):
+    y1, y2 = gauss_seidel(t, 1, 2*k+2, f1, f2)
+    plt.plot(t, y1, 'r')
+    plt.draw()
+    plt.plot(t, y2, 'b')
+    plt.draw()
 plt.show()
