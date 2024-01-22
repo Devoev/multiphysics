@@ -14,9 +14,11 @@ def f2(y1: float, y2: float) -> np.array:
     return np.sin(y1) - np.cos(y2)
 
 
-kmax = 5
+kmin = 3    # Inclusive
+kmax = 8    # Exclusive
+n = 100
 T = 5
-t = np.linspace(0, T, 100)
+t = np.linspace(0, T, n)
 
 
 # %% Define solvers
@@ -33,7 +35,7 @@ def euler(t: np.ndarray, y0: float, f: Callable[[int, float, float], float]) -> 
 
 
 def jacobi(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], float],
-    f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
+           f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
     n = t.size
     y1 = np.empty((n,))
     y2 = np.empty((n,))
@@ -49,7 +51,7 @@ def jacobi(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], flo
 
 
 def gauss_seidel(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], float],
-           f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
+                 f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
     n = t.size
     y1 = np.empty((n,))
     y2 = np.empty((n,))
@@ -64,12 +66,23 @@ def gauss_seidel(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float
     return y1, y2
 
 
-# %% Solve and plot
-plt.show()
-for k in range(kmax):
-    y1, y2 = gauss_seidel(t, 1, 2*k+2, f1, f2)
-    plt.plot(t, y1, 'r')
+# %% Solve
+y1 = np.empty((n, kmax - kmin))
+y2 = np.empty((n, kmax - kmin))
+
+for k in range(kmin, kmax):
+    i = k - kmin
+    y1[:, i], y2[:, i] = gauss_seidel(t, 1, k, f1, f2)
+
+# %% Plot
+for i in range(kmax - kmin):
+    style = 'r' if i == kmax-kmin-1 else 'r--'
+    plt.plot(t, y1[:, i], style)
     plt.draw()
-    plt.plot(t, y2, 'b')
+plt.show()
+
+for i in range(kmax - kmin):
+    style = 'b' if i == kmax-kmin-1 else 'b--'
+    plt.plot(t, y2[:, i], style)
     plt.draw()
 plt.show()
