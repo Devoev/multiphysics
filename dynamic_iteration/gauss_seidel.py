@@ -5,12 +5,13 @@ import numpy as np
 from ode.solve_ivp import solve_ivp
 
 
-def gauss_seidel(t: np.ndarray, y0: float, kmax: int, f1: Callable[[float, float], float],
+def gauss_seidel(t: np.ndarray, y0: [float, float], kmax: int, f1: Callable[[float, float], float],
                  f2: Callable[[float, float], float]) -> [np.ndarray, np.ndarray]:
     n = t.size
     y1 = np.empty((n,))
     y2 = np.empty((n,))
-    y1[0] = y2[0] = y0
+    y1[0] = y0[0]
+    y2[0] = y0[1]
 
     for k in range(kmax):
         y1_new = solve_ivp(t, y1[0], lambda i, ti, yi: f1(yi, y2[i]))
