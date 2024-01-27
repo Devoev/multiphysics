@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from dynamic_iteration.gauss_seidel import gauss_seidel
 
 # %% Simulation options
-kmin = 3    # Inclusive
+kmin = 4    # Inclusive
 kmax = 15   # Exclusive
 n = 100     # Time steps
 T = 5       # Time interval
