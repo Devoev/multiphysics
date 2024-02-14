@@ -1,5 +1,7 @@
 from abc import abstractmethod, ABC
 
+import numpy as np
+
 
 class UpdateScheme(ABC):
     """
@@ -11,5 +13,5 @@ class UpdateScheme(ABC):
     """
 
     @abstractmethod
-    def __call__(self, ti: float, tj: float, yi, yj, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
         """Evaluates this update scheme at ``(ti,tj,yi,yj,hi)`` with ``j=i+1``."""

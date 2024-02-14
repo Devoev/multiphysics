@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+import numpy as np
+
 from ode.UpdateScheme import UpdateScheme
 from ode.types import RHSFunction
 
@@ -15,7 +17,7 @@ class ExplicitEuler(UpdateScheme):
     f: RHSFunction
     """Right hand side function this scheme approximates."""
 
-    def __call__(self, ti: float, tj: float, yi, yj, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
         return self.f(ti, yi)
 
 
@@ -30,7 +32,7 @@ class ImplicitEuler(UpdateScheme):
     f: RHSFunction
     """Right hand side function this scheme approximates."""
 
-    def __call__(self, ti: float, tj: float, yi, yj, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
         return self.f(tj, yj)
 
 
