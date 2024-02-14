@@ -1,9 +1,9 @@
 import numpy as np
-from matplotlib import pyplot as plt
 
+from nonlinear.gauss_seidel import GaussSeidel
+from nonlinear.jacobi import Jacobi
 from ode.euler_schemes import ImplicitEuler
 from ode.solve_ivp import solve_ivp_implicit
-from nonlinear.solve_nonlinear import FSolveUpdate
 
 # %% Simulation options
 n = 100  # Time steps
@@ -24,11 +24,11 @@ y0 = np.array([1, 1, 1, 1])
 
 # %% Solve
 # y = solve_ivp_explicit(t, y0, ExplicitEuler(f))
-y = solve_ivp_implicit(t, y0, ImplicitEuler(f), FSolveUpdate())
+y = solve_ivp_implicit(t, y0, ImplicitEuler(f), Jacobi(2))
 
 # %% Plot
-plt.plot(t, y)
-plt.show()
+# plt.plot(t, y)
+# plt.show()
 
 # %% Error
 err = np.linalg.norm(y - y_ana(t), axis=0) / np.linalg.norm(y_ana(t), axis=0)
