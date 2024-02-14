@@ -17,7 +17,7 @@ class ExplicitEuler(UpdateScheme):
     f: RHSFunction
     """Right hand side function this scheme approximates."""
 
-    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> np.ndarray:
         return self.f(ti, yi)
 
 
@@ -32,7 +32,7 @@ class ImplicitEuler(UpdateScheme):
     f: RHSFunction
     """Right hand side function this scheme approximates."""
 
-    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> np.ndarray:
         return self.f(tj, yj)
 
 

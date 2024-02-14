@@ -13,5 +13,5 @@ class UpdateScheme(ABC):
     """
 
     @abstractmethod
-    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> float:
+    def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> np.ndarray:
         """Evaluates this update scheme at ``(ti,tj,yi,yj,hi)`` with ``j=i+1``."""
