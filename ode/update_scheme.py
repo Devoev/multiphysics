@@ -15,3 +15,11 @@ class UpdateScheme(ABC):
     @abstractmethod
     def __call__(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> np.ndarray:
         """Evaluates this update scheme at ``(ti,tj,yi,yj,hi)`` with ``j=i+1``."""
+
+    def update(self, ti: float, tj: float, yi: np.ndarray, yj: np.ndarray, hi: float) -> np.ndarray:
+        """
+        Calculates the update
+
+        ``yi + hi*P(ti,tj,yi,yj,hi)``.
+        """
+        return yi + hi*self(ti, tj, yi, yj, hi)
