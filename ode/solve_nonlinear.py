@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 import numpy as np
 import scipy as sp
 
-from ode.UpdateScheme import UpdateScheme
+from ode.update_scheme import UpdateScheme
 
 
 class NonLinearSolver(ABC):

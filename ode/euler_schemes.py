@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from ode.UpdateScheme import UpdateScheme
+from ode.update_scheme import UpdateScheme
 from ode.types import RHSFunction
 
 

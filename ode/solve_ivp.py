@@ -1,11 +1,7 @@
 import numpy as np
-import scipy as sp
 
-from ode.UpdateScheme import UpdateScheme
+from ode.update_scheme import UpdateScheme
 from ode.solve_nonlinear import NonLinearSolver
-
-
-# TODO: This only works for explicit schemes. Fix for implicit ones!
 
 
 def solve_ivp_explicit(t: np.ndarray, y0: np.ndarray, update: UpdateScheme) -> np.ndarray:
@@ -43,7 +39,6 @@ def solve_ivp_implicit(t: np.ndarray, y0: np.ndarray, solver: NonLinearSolver) -
     y[0] = y0
 
     for i in range(n - 1):
-        # TODO: Add update scheme
         y[i + 1] = solver(t[i], t[i+1], y[i], h[i])
 
     return y
