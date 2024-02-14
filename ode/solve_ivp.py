@@ -1,16 +1,16 @@
 import numpy as np
 
-from ode.euler_schemes import implicit_euler
-from ode.types import RHSFunction, UpdateScheme
+from ode.UpdateScheme import UpdateScheme
+
+# TODO: This only works for explicit schemes. Fix for implicit ones!
 
 
-def solve_ivp(t: np.ndarray, y0: float, f: RHSFunction, update: UpdateScheme = implicit_euler):
+def solve_ivp(t: np.ndarray, y0: float, update: UpdateScheme) -> np.ndarray:
     """
     Solves the initial value problem ``y' = f(t,y)``.
     :param t: Discrete time steps. Array of size ``(n)``.
     :param y0: Initial value.
-    :param f: Right hand side function.
-    :param update: Update scheme. Implicit Euler by default.
+    :param update: Update scheme.
     """
 
     n = t.size
@@ -19,6 +19,6 @@ def solve_ivp(t: np.ndarray, y0: float, f: RHSFunction, update: UpdateScheme = i
     y[0] = y0
 
     for i in range(n - 1):
-        y[i + 1] = update(i, t, y, h, f)
+        y[i + 1] = y[i] + h[i]*update(t[i], [i+1], y[i], y[i+1], h[i])
 
     return y

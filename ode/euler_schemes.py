@@ -1,14 +1,37 @@
-import numpy as np
-import scipy as sp
+from dataclasses import dataclass
 
+from ode.UpdateScheme import UpdateScheme
 from ode.types import RHSFunction
 
 
-def explicit_euler(i: int, t: np.ndarray, y: np.ndarray, h: np.ndarray, f: RHSFunction) -> float:
-    """Explicit Euler update scheme."""
-    return y[i] + h[i]*f(i, t[i], y[i])
+@dataclass
+class ExplicitEuler(UpdateScheme):
+    """
+    Explicit euler scheme with the explicit update function
+
+    ``P(ti,yi,hi) := f(ti, yi)``.
+    """
+
+    f: RHSFunction
+    """Right hand side function this scheme approximates."""
+
+    def __call__(self, ti: float, tj: float, yi, yj, hi: float) -> float:
+        return self.f(ti, yi)
 
 
-def implicit_euler(i: int, t: np.ndarray, y: np.ndarray, h: np.ndarray, f: RHSFunction) -> float:
-    """Implicit Euler update scheme."""
-    return sp.optimize.fsolve(lambda yn: yn - y[i] - h[i] * f(i, t[i + 1], yn), y[i])[0]
+@dataclass
+class ImplicitEuler(UpdateScheme):
+    """
+    Implicit euler scheme with the implicit update function
+
+    ``P(tj,yj,hi) := f(tj, yj)``.
+    """
+
+    f: RHSFunction
+    """Right hand side function this scheme approximates."""
+
+    def __call__(self, ti: float, tj: float, yi, yj, hi: float) -> float:
+        return self.f(tj, yj)
+
+
+
