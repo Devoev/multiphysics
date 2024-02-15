@@ -10,9 +10,7 @@ from nonlinear.solve_nonlinear import EqFunction
 class Jacobi(DynamicIteration):
     """Solves the nonlinear equation by a dynamic iteration with the Jacobi method."""
 
-    def eval(self, yl: float, l: int, f: EqFunction, yk: np.ndarray, ys: np.ndarray) -> float:
+    def eval(self, f: EqFunction, l: int, yl: float, yk: np.ndarray, ys: np.ndarray) -> float:
         inputs = np.copy(yk)
         inputs[l] = yl
         return f(inputs)[l]
-
-
