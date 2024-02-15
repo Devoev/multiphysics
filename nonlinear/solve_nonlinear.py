@@ -20,6 +20,8 @@ class NonLinearSolver(ABC):
         """Solves ``f(y) = 0`` with initial guess ``y0``."""
 
 
+# TODO: FSolve doesnt really work
+
 @dataclass
 class FSolve(NonLinearSolver):
     """
