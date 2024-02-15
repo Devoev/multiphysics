@@ -21,7 +21,7 @@ class NonLinearSolver(ABC):
 
 
 @dataclass
-class FSolveUpdate(NonLinearSolver):
+class FSolve(NonLinearSolver):
     """
     Solves the nonlinear equation using ``scipy.optimize.fsolve``.
     """
